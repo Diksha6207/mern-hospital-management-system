@@ -1,2 +1,11 @@
-node_modules
-backend/config.env
+node_modules/
+.env
+config.env
+.env.*
+dist/
+build/
+coverage/
+logs/
+*.log
+.DS_Store
+.vscode/
