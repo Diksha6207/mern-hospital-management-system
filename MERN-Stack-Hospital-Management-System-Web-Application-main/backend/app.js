@@ -18,10 +18,11 @@ config();
 console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
 // ✅ CORS
+import cors from "cors";
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "https://mern-hospital-management-system-frontend.onrender.com",
     credentials: true,
   })
 );
