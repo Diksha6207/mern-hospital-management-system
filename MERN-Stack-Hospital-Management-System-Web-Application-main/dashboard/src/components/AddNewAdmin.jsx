@@ -21,30 +21,29 @@ const AddNewAdmin = () => {
   const handleAddNewAdmin = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(
-          "http://localhost:5000/api/v1/user/admin/addnew",
-          { firstName, lastName, email, phone, nic, dob, gender, password },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/");
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setPhone("");
-          setNic("");
-          setDob("");
-          setGender("");
-          setPassword("");
-        });
+      const res = await axios.post(
+        "https://mern-hospital-management-system-2.onrender.com/api/v1/user/admin/addnew",
+        { firstName, lastName, email, phone, nic, dob, gender, password },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      toast.success(res.data.message);
+      setIsAuthenticated(true);
+      navigateTo("/");
+
+      // reset form
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPhone("");
+      setNic("");
+      setDob("");
+      setGender("");
+      setPassword("");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -55,8 +54,9 @@ const AddNewAdmin = () => {
   return (
     <section className="page">
       <section className="container form-component add-admin-form">
-      <img src="/logo.png" alt="logo" className="logo"/>
+        <img src="/logo.png" alt="logo" className="logo" />
         <h1 className="form-title">ADD NEW ADMIN</h1>
+
         <form onSubmit={handleAddNewAdmin}>
           <div>
             <input
@@ -72,9 +72,10 @@ const AddNewAdmin = () => {
               onChange={(e) => setLastName(e.target.value)}
             />
           </div>
+
           <div>
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -86,26 +87,28 @@ const AddNewAdmin = () => {
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
+
           <div>
             <input
-              type="number"
+              type="text"
               placeholder="NIC"
               value={nic}
               onChange={(e) => setNic(e.target.value)}
             />
             <input
-              type={"date"}
-              placeholder="Date of Birth"
+              type="date"
               value={dob}
               onChange={(e) => setDob(e.target.value)}
             />
           </div>
+
           <div>
             <select value={gender} onChange={(e) => setGender(e.target.value)}>
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
+
             <input
               type="password"
               placeholder="Password"
@@ -113,6 +116,7 @@ const AddNewAdmin = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <div style={{ justifyContent: "center", alignItems: "center" }}>
             <button type="submit">ADD NEW ADMIN</button>
           </div>

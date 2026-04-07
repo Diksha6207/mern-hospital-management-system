@@ -13,41 +13,43 @@ import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [show, setShow] = useState(false);
-
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const navigateTo = useNavigate();
 
   const handleLogout = async () => {
-    await axios
-      .get("http://localhost:5000/api/v1/user/admin/logout", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        setIsAuthenticated(false);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
-  };
+    try {
+      const res = await axios.get(
+        "https://mern-hospital-management-system-2.onrender.com/api/v1/user/admin/logout"
+      );
 
-  const navigateTo = useNavigate();
+      toast.success(res.data.message);
+      setIsAuthenticated(false);
+      navigateTo("/login");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Logout failed");
+    }
+  };
 
   const gotoHomePage = () => {
     navigateTo("/");
     setShow(!show);
   };
+
   const gotoDoctorsPage = () => {
     navigateTo("/doctors");
     setShow(!show);
   };
+
   const gotoMessagesPage = () => {
     navigateTo("/messages");
     setShow(!show);
   };
+
   const gotoAddNewDoctor = () => {
     navigateTo("/doctor/addnew");
     setShow(!show);
   };
+
   const gotoAddNewAdmin = () => {
     navigateTo("/admin/addnew");
     setShow(!show);
@@ -68,11 +70,15 @@ const Sidebar = () => {
           <RiLogoutBoxFill onClick={handleLogout} />
         </div>
       </nav>
+
       <div
         className="wrapper"
         style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
       >
-        <GiHamburgerMenu className="hamburger" onClick={() => setShow(!show)} />
+        <GiHamburgerMenu
+          className="hamburger"
+          onClick={() => setShow(!show)}
+        />
       </div>
     </>
   );

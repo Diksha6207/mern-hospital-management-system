@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
@@ -19,18 +18,15 @@ import AddNewAdmin from "./components/AddNewAdmin";
 import "./App.css";
 
 const App = () => {
-  const { isAuthenticated, setIsAuthenticated, admin, setAdmin } =
-    useContext(Context);
+  const { setIsAuthenticated, setAdmin } = useContext(Context);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/user/admin/me",
-          {
-            withCredentials: true,
-          }
+          "https://mern-hospital-management-system-2.onrender.com/api/v1/user/admin/me"
         );
+
         setIsAuthenticated(true);
         setAdmin(response.data.user);
       } catch (error) {
@@ -38,12 +34,14 @@ const App = () => {
         setAdmin({});
       }
     };
+
     fetchUser();
-  }, [isAuthenticated]);
+  }, []); // ✅ FIXED (no loop)
 
   return (
     <Router>
       <Sidebar />
+
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
@@ -52,6 +50,7 @@ const App = () => {
         <Route path="/messages" element={<Messages />} />
         <Route path="/doctors" element={<Doctors />} />
       </Routes>
+
       <ToastContainer position="top-center" />
     </Router>
   );

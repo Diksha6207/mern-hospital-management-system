@@ -11,15 +11,10 @@ import appointmentRouter from "./router/appointmentRouter.js";
 
 const app = express();
 
-// ✅ Load .env file
+// ✅ Load .env
 config();
 
-// ✅ Debug (temporary)
-console.log("JWT_SECRET:", process.env.JWT_SECRET);
-
-// ✅ CORS
-import cors from "cors";
-
+// ✅ CORS (ONLY ONCE)
 app.use(
   cors({
     origin: "https://mern-hospital-management-system-frontend.onrender.com",
@@ -44,7 +39,7 @@ app.use("/api/v1/message", messageRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 
-// ✅ DB Connection
+// ✅ DB
 dbConnection();
 
 // ✅ Error Middleware
