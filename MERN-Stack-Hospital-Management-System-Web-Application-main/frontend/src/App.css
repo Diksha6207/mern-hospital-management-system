@@ -7,32 +7,49 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Container */
+/* NAVBAR FIX */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: #007bff;
+}
+
+nav ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* FORM UI */
 .container {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Form Box */
 .form-component {
   width: 100%;
   max-width: 900px;
   margin: 40px auto;
   padding: 30px;
   background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
   border-radius: 10px;
 }
 
-/* Heading */
 .form-component h2 {
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* Form Layout */
 .form-component form {
   display: flex;
   flex-direction: column;
@@ -44,26 +61,17 @@
   gap: 10px;
 }
 
-/* Inputs */
-.form-component input,
-.form-component select,
-.form-component textarea {
+input, select, textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-/* Button */
-.form-component button {
+button {
   padding: 12px;
   background: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
-}
-
-.form-component button:hover {
-  background: #0056b3;
 }
