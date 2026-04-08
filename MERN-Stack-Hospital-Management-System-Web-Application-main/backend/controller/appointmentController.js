@@ -1,51 +1,69 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
+import ErrorHandler from "../middlewares/error.js";
 import { Appointment } from "../models/appointmentSchema.js";
+import { User } from "../models/userSchema.js";
 
+// 👉 CREATE APPOINTMENT
 export const postAppointment = catchAsyncErrors(async (req, res, next) => {
   const {
     firstName,
     lastName,
     email,
     phone,
+    nic,
     dob,
     gender,
     appointment_date,
     department,
-    doctor,
+    doctor_firstName,
+    doctor_lastName,
     address,
   } = req.body;
 
-  // ✅ SIMPLE VALIDATION (frontend के हिसाब से)
   if (
     !firstName ||
     !lastName ||
     !email ||
     !phone ||
+    !nic ||
     !dob ||
     !gender ||
     !appointment_date ||
     !department ||
-    !doctor ||
+    !doctor_firstName ||
+    !doctor_lastName ||
     !address
   ) {
-    return res.status(400).json({
-      success: false,
-      message: "Please Fill Full Form!",
-    });
+    return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
 
-  // ✅ सीधे save (no auth, no doctor check)
+  const doctor = await User.findOne({
+    firstName: doctor_firstName,
+    lastName: doctor_lastName,
+    role: "Doctor",
+    doctorDepartment: department,
+  });
+
+  if (!doctor) {
+    return next(new ErrorHandler("Doctor not found", 404));
+  }
+
   const appointment = await Appointment.create({
     firstName,
     lastName,
     email,
     phone,
+    nic,
     dob,
     gender,
     appointment_date,
     department,
-    doctor,
+    doctor: {
+      firstName: doctor_firstName,
+      lastName: doctor_lastName,
+    },
     address,
+    doctorId: doctor._id,
   });
 
   res.status(200).json({
@@ -55,7 +73,7 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// बाकी functions simple रखे
+// 👉 GET ALL
 export const getAllAppointments = catchAsyncErrors(async (req, res) => {
   const appointments = await Appointment.find();
   res.status(200).json({
@@ -64,12 +82,17 @@ export const getAllAppointments = catchAsyncErrors(async (req, res) => {
   });
 });
 
-export const updateAppointmentStatus = catchAsyncErrors(async (req, res) => {
+// 👉 UPDATE
+export const updateAppointmentStatus = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
-  await Appointment.findByIdAndUpdate(id, req.body, {
+  const appointment = await Appointment.findByIdAndUpdate(id, req.body, {
     new: true,
   });
+
+  if (!appointment) {
+    return next(new ErrorHandler("Appointment not found!", 404));
+  }
 
   res.status(200).json({
     success: true,
@@ -77,10 +100,15 @@ export const updateAppointmentStatus = catchAsyncErrors(async (req, res) => {
   });
 });
 
-export const deleteAppointment = catchAsyncErrors(async (req, res) => {
+// 👉 DELETE
+export const deleteAppointment = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
-  await Appointment.findByIdAndDelete(id);
+  const appointment = await Appointment.findByIdAndDelete(id);
+
+  if (!appointment) {
+    return next(new ErrorHandler("Appointment not found!", 404));
+  }
 
   res.status(200).json({
     success: true,
