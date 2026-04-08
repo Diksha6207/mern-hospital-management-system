@@ -10,7 +10,7 @@ const AppointmentForm = () => {
     lastName: "",
     email: "",
     phone: "",
-    nic: "12345",
+    nic: "",
     dob: "",
     gender: "",
     appointment_date: "",
@@ -28,35 +28,30 @@ const AppointmentForm = () => {
           "https://mern-hospital-management-system-2.onrender.com/api/v1/user/doctors"
         );
         setDoctors(res.data.doctors || []);
-      } catch (error) {
-        console.log("Doctor fetch error:", error);
+      } catch (err) {
+        console.log(err);
       }
     };
     fetchDoctors();
   }, []);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // DOCTOR SELECT
   const handleDoctorChange = (e) => {
-    const selected = doctors.find((doc) => doc._id === e.target.value);
-
-    if (selected) {
+    const doc = doctors.find((d) => d._id === e.target.value);
+    if (doc) {
       setFormData({
         ...formData,
-        doctor_firstName: selected.firstName,
-        doctor_lastName: selected.lastName,
+        doctor_firstName: doc.firstName,
+        doctor_lastName: doc.lastName,
+        department: doc.doctorDepartment, // auto fill
       });
     }
   };
 
-  // SUBMIT
-  const handleAppointment = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const {
@@ -64,6 +59,7 @@ const AppointmentForm = () => {
       lastName,
       email,
       phone,
+      nic,
       dob,
       gender,
       appointment_date,
@@ -78,6 +74,7 @@ const AppointmentForm = () => {
       !lastName ||
       !email ||
       !phone ||
+      !nic ||
       !dob ||
       !gender ||
       !appointment_date ||
@@ -103,7 +100,7 @@ const AppointmentForm = () => {
         lastName: "",
         email: "",
         phone: "",
-        nic: "12345",
+        nic: "",
         dob: "",
         gender: "",
         appointment_date: "",
@@ -112,40 +109,43 @@ const AppointmentForm = () => {
         doctor_lastName: "",
         address: "",
       });
-    } catch (error) {
-      alert(error.response?.data?.message || "Error");
+    } catch (err) {
+      alert(err.response?.data?.message || "Error");
     }
   };
 
   return (
-    <div className="container form-component">
+    <div className="form-container">
       <h2>Book Appointment</h2>
 
-      <form onSubmit={handleAppointment}>
-        <div>
-          <input name="firstName" placeholder="First Name" onChange={handleChange} />
-          <input name="lastName" placeholder="Last Name" onChange={handleChange} />
-        </div>
+      <form onSubmit={handleSubmit}>
+        <input name="firstName" placeholder="First Name" onChange={handleChange} />
+        <input name="lastName" placeholder="Last Name" onChange={handleChange} />
 
-        <div>
-          <input name="email" placeholder="Email" onChange={handleChange} />
-          <input name="phone" placeholder="Phone" onChange={handleChange} />
-        </div>
+        <input name="email" placeholder="Email" onChange={handleChange} />
+        <input name="phone" placeholder="Phone" onChange={handleChange} />
 
-        <div>
-          <input type="date" name="dob" onChange={handleChange} />
-          <select name="gender" onChange={handleChange}>
-            <option value="">Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
+        <input name="nic" placeholder="NIC Number" onChange={handleChange} />
 
-        <div>
-          <input type="date" name="appointment_date" onChange={handleChange} />
-          <input name="department" placeholder="Department" onChange={handleChange} />
-        </div>
+        <input type="date" name="dob" onChange={handleChange} />
 
+        <select name="gender" onChange={handleChange}>
+          <option value="">Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+        <input type="date" name="appointment_date" onChange={handleChange} />
+
+        {/* Department Dropdown */}
+        <select name="department" onChange={handleChange} value={formData.department}>
+          <option value="">Select Department</option>
+          <option value="Pediatrics">Pediatrics</option>
+          <option value="Neurology">Neurology</option>
+          <option value="Cardiology">Cardiology</option>
+        </select>
+
+        {/* Doctor Dropdown */}
         <select onChange={handleDoctorChange}>
           <option value="">Select Doctor</option>
           {doctors.map((doc) => (

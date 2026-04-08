@@ -7,18 +7,18 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* NAVBAR */
+/* NAVBAR FIX */
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 40px;
+  padding: 15px 50px;
   background: #007bff;
 }
 
 nav ul {
   display: flex;
-  gap: 25px;
+  gap: 30px;
   list-style: none;
 }
 
@@ -28,40 +28,24 @@ nav a {
   font-weight: 500;
 }
 
-/* FORM */
-.container {
-  display: flex;
-  justify-content: center;
-}
-
-.form-component {
+/* FORM UI */
+.form-container {
   width: 100%;
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 30px;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 25px;
   background: #fff;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
   border-radius: 10px;
 }
 
-.form-component h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.form-component form {
+form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-}
-
-.form-component form div {
-  display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 input, select, textarea {
-  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -73,5 +57,4 @@ button {
   color: white;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
 }
