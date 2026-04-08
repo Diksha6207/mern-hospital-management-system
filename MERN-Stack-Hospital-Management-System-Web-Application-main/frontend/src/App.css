@@ -1,136 +1,69 @@
-import React, { useState } from "react";
-import axios from "axios";
-import "../App.css";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-const AppointmentForm = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    dob: "",
-    gender: "",
-    appointment_date: "",
-    department: "",
-    doctor: "",
-    address: "",
-  });
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+/* Container */
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  const handleAppointment = async (e) => {
-    e.preventDefault();
+/* Form Box */
+.form-component {
+  width: 100%;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
 
-    const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      dob,
-      gender,
-      appointment_date,
-      department,
-      doctor,
-      address,
-    } = formData;
+/* Heading */
+.form-component h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !phone ||
-      !dob ||
-      !gender ||
-      !appointment_date ||
-      !department ||
-      !doctor ||
-      !address
-    ) {
-      alert("Please Fill Full Form!");
-      return;
-    }
+/* Form Layout */
+.form-component form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
-    try {
-      const { data } = await axios.post(
-        "https://YOUR-BACKEND-URL/api/v1/appointment",
-        formData
-      );
+.form-component form div {
+  display: flex;
+  gap: 10px;
+}
 
-      alert(data.message || "Appointment Booked Successfully");
+/* Inputs */
+.form-component input,
+.form-component select,
+.form-component textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        dob: "",
-        gender: "",
-        appointment_date: "",
-        department: "",
-        doctor: "",
-        address: "",
-      });
-    } catch (error) {
-      alert(error.response?.data?.message || "Error");
-    }
-  };
+/* Button */
+.form-component button {
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-  return (
-    <div className="container form-component">
-      <h2>Book Appointment</h2>
-
-      <form onSubmit={handleAppointment}>
-        <div>
-          <input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} />
-          <input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
-        </div>
-
-        <div>
-          <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-          <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
-        </div>
-
-        <div>
-          <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
-          <select name="gender" value={formData.gender} onChange={handleChange}>
-            <option value="">Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-
-        <div>
-          <input type="date" name="appointment_date" value={formData.appointment_date} onChange={handleChange} />
-          <select name="department" value={formData.department} onChange={handleChange}>
-            <option value="">Department</option>
-            <option value="Pediatrics">Pediatrics</option>
-            <option value="Neurology">Neurology</option>
-          </select>
-        </div>
-
-        <div>
-          <select name="doctor" value={formData.doctor} onChange={handleChange}>
-            <option value="">Select Doctor</option>
-            <option value="Priya Mehta">Priya Mehta</option>
-          </select>
-        </div>
-
-        <textarea
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleChange}
-        ></textarea>
-
-        <button type="submit">Get Appointment</button>
-      </form>
-    </div>
-  );
-};
-
-export default AppointmentForm;
+.form-component button:hover {
+  background: #0056b3;
+}
