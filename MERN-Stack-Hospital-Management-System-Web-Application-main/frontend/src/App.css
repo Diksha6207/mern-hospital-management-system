@@ -7,8 +7,8 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* NAVBAR FIX */
-nav {
+/* NAVBAR */
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,45 +16,63 @@ nav {
   background: #007bff;
 }
 
-nav ul {
-  display: flex;
-  gap: 30px;
-  list-style: none;
+.logo-img {
+  width: 50px;
 }
 
-nav a {
-  color: white;
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.links {
+  display: flex;
+  gap: 25px;
+}
+
+.links a {
   text-decoration: none;
+  color: white;
   font-weight: 500;
 }
 
-/* FORM UI */
-.form-container {
-  width: 100%;
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 25px;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  border-radius: 10px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-input, select, textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  padding: 12px;
-  background: #007bff;
-  color: white;
+/* BUTTONS */
+.btn {
+  padding: 8px 15px;
   border: none;
+  background: white;
+  color: #007bff;
+  cursor: pointer;
   border-radius: 5px;
+}
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .navLinks {
+    position: absolute;
+    top: 70px;
+    right: -100%;
+    flex-direction: column;
+    background: #007bff;
+    width: 200px;
+    padding: 20px;
+    transition: 0.3s;
+  }
+
+  .showmenu {
+    right: 0;
+  }
+
+  .hamburger {
+    display: block;
+    color: white;
+  }
 }

@@ -3,7 +3,7 @@ import ErrorHandler from "../middlewares/error.js";
 import { Appointment } from "../models/appointmentSchema.js";
 import { User } from "../models/userSchema.js";
 
-// 👉 CREATE APPOINTMENT
+// ✅ CREATE APPOINTMENT
 export const postAppointment = catchAsyncErrors(async (req, res, next) => {
   const {
     firstName,
@@ -19,6 +19,8 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     doctor_lastName,
     address,
   } = req.body;
+
+  const patientId = req.user?._id;
 
   if (
     !firstName ||
@@ -37,11 +39,14 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
 
+  if (!patientId) {
+    return next(new ErrorHandler("User not authenticated", 401));
+  }
+
   const doctor = await User.findOne({
     firstName: doctor_firstName,
     lastName: doctor_lastName,
     role: "Doctor",
-    doctorDepartment: department,
   });
 
   if (!doctor) {
@@ -64,54 +69,62 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     },
     address,
     doctorId: doctor._id,
+    patientId,
+    status: "Pending", // ✅ added
   });
 
   res.status(200).json({
     success: true,
-    message: "Appointment Booked Successfully",
+    message: "Appointment Booked Successfully!",
     appointment,
   });
 });
 
-// 👉 GET ALL
-export const getAllAppointments = catchAsyncErrors(async (req, res) => {
+// ✅ GET ALL APPOINTMENTS
+export const getAllAppointments = catchAsyncErrors(async (req, res, next) => {
   const appointments = await Appointment.find();
+
   res.status(200).json({
     success: true,
     appointments,
   });
 });
 
-// 👉 UPDATE
+// ✅ UPDATE STATUS (🔥 FINAL FIX)
 export const updateAppointmentStatus = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
+  const { status } = req.body;
 
-  const appointment = await Appointment.findByIdAndUpdate(id, req.body, {
-    new: true,
-  });
+  const appointment = await Appointment.findById(id);
 
   if (!appointment) {
-    return next(new ErrorHandler("Appointment not found!", 404));
+    return next(new ErrorHandler("Appointment not found", 404));
   }
+
+  appointment.status = status;
+
+  await appointment.save();
 
   res.status(200).json({
     success: true,
-    message: "Updated Successfully",
+    message: "Appointment Status Updated!",
   });
 });
 
-// 👉 DELETE
+// ✅ DELETE APPOINTMENT
 export const deleteAppointment = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
-  const appointment = await Appointment.findByIdAndDelete(id);
+  const appointment = await Appointment.findById(id);
 
   if (!appointment) {
-    return next(new ErrorHandler("Appointment not found!", 404));
+    return next(new ErrorHandler("Appointment not found", 404));
   }
+
+  await appointment.deleteOne();
 
   res.status(200).json({
     success: true,
-    message: "Deleted Successfully",
+    message: "Appointment Deleted Successfully!",
   });
 });
