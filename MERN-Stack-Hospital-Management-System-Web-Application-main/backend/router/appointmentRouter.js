@@ -5,16 +5,15 @@ import {
   postAppointment,
   updateAppointmentStatus,
 } from "../controller/appointmentController.js";
-import {
-  isAdminAuthenticated,
-  isPatientAuthenticated,
-} from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.post("/post", isPatientAuthenticated, postAppointment);
-router.get("/getall", isAdminAuthenticated, getAllAppointments);
-router.put("/update/:id", isAdminAuthenticated, updateAppointmentStatus);
-router.delete("/delete/:id", isAdminAuthenticated, deleteAppointment);
+// ❌ AUTH REMOVE (IMPORTANT)
+router.post("/post", postAppointment);
+
+// बाकी admin वाले वैसे ही रहने दो
+router.get("/getall", getAllAppointments);
+router.put("/update/:id", updateAppointmentStatus);
+router.delete("/delete/:id", deleteAppointment);
 
 export default router;

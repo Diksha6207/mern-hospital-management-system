@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import "./AppointmentForm.css";
 
 const AppointmentForm = () => {
-  const [doctors, setDoctors] = useState([]);
-  const [doctorId, setDoctorId] = useState("");
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,25 +12,10 @@ const AppointmentForm = () => {
     gender: "",
     appointment_date: "",
     department: "",
+    doctor: "",
     address: "",
   });
 
-  // 👉 Fetch Doctors
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const { data } = await axios.get(
-          "https://mern-hospital-management-system-2.onrender.com/api/v1/user/doctors"
-        );
-        setDoctors(data.doctors);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchDoctors();
-  }, []);
-
-  // 👉 Handle input
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -41,78 +23,113 @@ const AppointmentForm = () => {
     });
   };
 
-  // 👉 Submit
   const handleAppointment = async (e) => {
     e.preventDefault();
 
-    if (!doctorId) {
-      toast.error("Please select a doctor");
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      dob,
+      gender,
+      appointment_date,
+      department,
+      doctor,
+      address,
+    } = formData;
+
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !phone ||
+      !dob ||
+      !gender ||
+      !appointment_date ||
+      !department ||
+      !doctor ||
+      !address
+    ) {
+      alert("Please Fill Full Form!");
       return;
     }
 
     try {
       const { data } = await axios.post(
-        "https://mern-hospital-management-system-2.onrender.com/api/v1/appointment/post",
-        {
-          ...formData,
-          doctorId,
-        },
-        {
-          withCredentials: true,
-        }
+        "https://your-backend-url.onrender.com/api/v1/appointment",
+        formData
       );
 
-      toast.success(data.message);
+      alert("Appointment Booked Successfully ✅");
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        dob: "",
+        gender: "",
+        appointment_date: "",
+        department: "",
+        doctor: "",
+        address: "",
+      });
     } catch (error) {
-      toast.error(error.response?.data?.message);
+      alert(error.response?.data?.message || "Error");
     }
   };
 
   return (
-    <section className="appointment-form">
+    <div className="appointment-container">
       <h2>Book Appointment</h2>
 
-      <form onSubmit={handleAppointment}>
-        <input type="text" name="firstName" placeholder="First Name" onChange={handleChange} />
-        <input type="text" name="lastName" placeholder="Last Name" onChange={handleChange} />
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} />
-        <input type="number" name="phone" placeholder="Phone" onChange={handleChange} />
-        <input type="date" name="dob" onChange={handleChange} />
+      <form onSubmit={handleAppointment} className="appointment-form">
+        <div className="form-row">
+          <input name="firstName" value={formData.firstName} onChange={handleChange} placeholder="First Name" />
+          <input name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Last Name" />
+        </div>
 
-        <select name="gender" onChange={handleChange}>
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
+        <div className="form-row">
+          <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
+          <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone" />
+        </div>
 
-        <input type="date" name="appointment_date" onChange={handleChange} />
+        <div className="form-row">
+          <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
+          <select name="gender" value={formData.gender} onChange={handleChange}>
+            <option value="">Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
 
-        {/* ✅ Department dropdown */}
-        <select name="department" onChange={handleChange}>
-          <option value="">Select Department</option>
-          <option value="Cardiology">Cardiology</option>
-          <option value="Neurology">Neurology</option>
-          <option value="Orthopedics">Orthopedics</option>
-          <option value="Radiology">Radiology</option>
-          <option value="Pediatrics">Pediatrics</option>
-        </select>
+        <div className="form-row">
+          <input type="date" name="appointment_date" value={formData.appointment_date} onChange={handleChange} />
+          <select name="department" value={formData.department} onChange={handleChange}>
+            <option value="">Department</option>
+            <option value="Neurology">Neurology</option>
+            <option value="Pediatrics">Pediatrics</option>
+          </select>
+        </div>
 
-        <textarea name="address" placeholder="Address" onChange={handleChange} />
+        <div className="form-row">
+          <select name="doctor" value={formData.doctor} onChange={handleChange}>
+            <option value="">Select Doctor</option>
+            <option value="Priya Mehta">Priya Mehta</option>
+          </select>
+        </div>
 
-        {/* ✅ Doctor dropdown */}
-        <select value={doctorId} onChange={(e) => setDoctorId(e.target.value)}>
-          <option value="">Select Doctor</option>
-
-          {doctors.map((doc) => (
-            <option key={doc._id} value={doc._id}>
-              {doc.firstName} {doc.lastName} ({doc.doctorDepartment})
-            </option>
-          ))}
-        </select>
+        <textarea
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          placeholder="Address"
+        ></textarea>
 
         <button type="submit">Get Appointment</button>
       </form>
-    </section>
+    </div>
   );
 };
 
