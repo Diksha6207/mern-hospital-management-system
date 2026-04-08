@@ -7,7 +7,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* NAVBAR FIX */
+/* NAVBAR */
 nav {
   display: flex;
   justify-content: space-between;
@@ -18,7 +18,7 @@ nav {
 
 nav ul {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   list-style: none;
 }
 
@@ -28,11 +28,10 @@ nav a {
   font-weight: 500;
 }
 
-/* FORM UI */
+/* FORM */
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .form-component {
@@ -74,4 +73,5 @@ button {
   color: white;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
 }

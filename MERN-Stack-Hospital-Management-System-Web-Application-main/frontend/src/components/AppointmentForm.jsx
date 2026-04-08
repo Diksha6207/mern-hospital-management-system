@@ -10,7 +10,7 @@ const AppointmentForm = () => {
     lastName: "",
     email: "",
     phone: "",
-    nic: "12345", // dummy (backend require karta hai)
+    nic: "12345",
     dob: "",
     gender: "",
     appointment_date: "",
@@ -20,13 +20,17 @@ const AppointmentForm = () => {
     address: "",
   });
 
-  // ✅ doctors fetch
+  // FETCH DOCTORS
   useEffect(() => {
     const fetchDoctors = async () => {
-      const { data } = await axios.get(
-        "https://mern-hospital-management-system-2.onrender.com/api/v1/user/doctors"
-      );
-      setDoctors(data.doctors);
+      try {
+        const res = await axios.get(
+          "https://mern-hospital-management-system-2.onrender.com/api/v1/user/doctors"
+        );
+        setDoctors(res.data.doctors || []);
+      } catch (error) {
+        console.log("Doctor fetch error:", error);
+      }
     };
     fetchDoctors();
   }, []);
@@ -38,18 +42,20 @@ const AppointmentForm = () => {
     });
   };
 
-  // ✅ doctor select fix
+  // DOCTOR SELECT
   const handleDoctorChange = (e) => {
-    const doc = doctors.find((d) => d._id === e.target.value);
+    const selected = doctors.find((doc) => doc._id === e.target.value);
 
-    setFormData({
-      ...formData,
-      doctor_firstName: doc.firstName,
-      doctor_lastName: doc.lastName,
-    });
+    if (selected) {
+      setFormData({
+        ...formData,
+        doctor_firstName: selected.firstName,
+        doctor_lastName: selected.lastName,
+      });
+    }
   };
 
-  // ✅ submit
+  // SUBMIT
   const handleAppointment = async (e) => {
     e.preventDefault();
 
@@ -140,7 +146,6 @@ const AppointmentForm = () => {
           <input name="department" placeholder="Department" onChange={handleChange} />
         </div>
 
-        {/* ✅ DOCTOR DROPDOWN */}
         <select onChange={handleDoctorChange}>
           <option value="">Select Doctor</option>
           {doctors.map((doc) => (
