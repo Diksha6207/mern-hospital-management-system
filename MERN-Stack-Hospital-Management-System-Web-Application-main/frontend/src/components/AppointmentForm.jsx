@@ -18,12 +18,12 @@ const AppointmentForm = () => {
     address: "",
   });
 
-  // 👉 Doctors fetch
+  // 👉 Fetch Doctors
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const { data } = await axios.get(
-          "/api/v1/user/doctors"
+          "https://mern-hospital-management-system-2.onrender.com/api/v1/user/doctors"
         );
         setDoctors(data.doctors);
       } catch (error) {
@@ -33,7 +33,7 @@ const AppointmentForm = () => {
     fetchDoctors();
   }, []);
 
-  // 👉 Input handle
+  // 👉 Handle input
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -52,7 +52,7 @@ const AppointmentForm = () => {
 
     try {
       const { data } = await axios.post(
-        "/api/v1/appointment/post",
+        "https://mern-hospital-management-system-2.onrender.com/api/v1/appointment/post",
         {
           ...formData,
           doctorId,
@@ -70,43 +70,14 @@ const AppointmentForm = () => {
 
   return (
     <section className="appointment-form">
-      <h2>Appointment</h2>
+      <h2>Book Appointment</h2>
 
       <form onSubmit={handleAppointment}>
-        
-        <input
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          onChange={handleChange}
-        />
-
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          onChange={handleChange}
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-        />
-
-        <input
-          type="number"
-          name="phone"
-          placeholder="Phone"
-          onChange={handleChange}
-        />
-
-        <input
-          type="date"
-          name="dob"
-          onChange={handleChange}
-        />
+        <input type="text" name="firstName" placeholder="First Name" onChange={handleChange} />
+        <input type="text" name="lastName" placeholder="Last Name" onChange={handleChange} />
+        <input type="email" name="email" placeholder="Email" onChange={handleChange} />
+        <input type="number" name="phone" placeholder="Phone" onChange={handleChange} />
+        <input type="date" name="dob" onChange={handleChange} />
 
         <select name="gender" onChange={handleChange}>
           <option value="">Select Gender</option>
@@ -114,30 +85,22 @@ const AppointmentForm = () => {
           <option value="Female">Female</option>
         </select>
 
-        <input
-          type="date"
-          name="appointment_date"
-          onChange={handleChange}
-        />
+        <input type="date" name="appointment_date" onChange={handleChange} />
 
-        <input
-          type="text"
-          name="department"
-          placeholder="Department"
-          onChange={handleChange}
-        />
+        {/* ✅ Department dropdown */}
+        <select name="department" onChange={handleChange}>
+          <option value="">Select Department</option>
+          <option value="Cardiology">Cardiology</option>
+          <option value="Neurology">Neurology</option>
+          <option value="Orthopedics">Orthopedics</option>
+          <option value="Radiology">Radiology</option>
+          <option value="Pediatrics">Pediatrics</option>
+        </select>
 
-        <textarea
-          name="address"
-          placeholder="Address"
-          onChange={handleChange}
-        />
+        <textarea name="address" placeholder="Address" onChange={handleChange} />
 
-        {/* 🔥 DOCTOR DROPDOWN */}
-        <select
-          value={doctorId}
-          onChange={(e) => setDoctorId(e.target.value)}
-        >
+        {/* ✅ Doctor dropdown */}
+        <select value={doctorId} onChange={(e) => setDoctorId(e.target.value)}>
           <option value="">Select Doctor</option>
 
           {doctors.map((doc) => (
